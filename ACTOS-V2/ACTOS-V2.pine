@@ -1,1 +1,58 @@
+//@version=6
+strategy("ACTOS-V2", overlay=true, initial_capital=20000, pyramiding=5)  // Set pyramiding to allow multiple orders
 
+
+// Define inputs
+emaLengthRSI = 8  // Optimized value
+emaLengthShort = 13  // Optimized value
+emaLengthLong = 117  // Optimized value
+psarStart = 0.03  // Optimized value
+psarInc = 0.09  // Optimized value
+psarMax = 0.12  // Optimized value
+
+
+// Calculate indicators
+rsiValue = ta.rsi(close, 14)
+pEmaRSI = ta.ema(rsiValue, emaLengthRSI)
+emaShort = ta.ema(close, emaLengthShort)
+emaLong = ta.ema(close, emaLengthLong)
+psarValue = ta.sar(psarStart, psarInc, psarMax)
+
+
+// Initialize states
+var float prevPSAR = na
+var float prevRSI = na
+
+
+// Define entry conditions
+longCondition = (pEmaRSI > 60 and emaShort > emaLong)
+shortCondition = (pEmaRSI < 40 and psarValue > close and prevPSAR <= psarValue)
+exitCondition = (rsiValue > 55 and prevRSI > rsiValue)
+
+
+// Calculate position size based on available capital
+posSize = strategy.equity / close
+
+
+// Check conditions and take actions
+if (not na(prevPSAR) and not na(prevRSI))  // Ensure previous values are available
+   if (strategy.position_size == 0)  // No position currently held
+       if (longCondition)
+           strategy.entry("Buy", strategy.long, qty=posSize)
+       else if (shortCondition)
+           strategy.entry("Sell", strategy.short, qty=posSize)
+   else if (strategy.position_size > 0)  // Holding a long position
+       if (shortCondition or exitCondition)
+           strategy.close("Buy")
+       else if (longCondition)  // Adding to long position if long condition is met
+           strategy.entry("Buy", strategy.long, qty=posSize)
+   else if (strategy.position_size < 0)  // Holding a short position
+       if (longCondition or exitCondition)
+           strategy.close("Sell")
+       else if (shortCondition)  // Adding to short position if short condition is met
+           strategy.entry("Sell", strategy.short, qty=posSize)
+
+
+// Update previous values
+prevPSAR := psarValue
+prevRSI := rsiValue
