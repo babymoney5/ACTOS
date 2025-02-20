@@ -40,28 +40,6 @@ These indicators were selected based on their performance in **different market 
 
 ---
 
-## 📂 Repository Structure 
-
-MIHCS-Trading-Strategies/
-│── ACTOS-V1/                                  # First version of the strategy
-│   │── ACTOS-V1.pine                          # Pine Script for TradingView
-│   │── backtesting.md                         # Backtesting results & analysis
-│
-│── ACTOS-V2/                                  # Optimized version using NSGA-II
-│   │── ACTOS-V2.pine                          # Pine Script for TradingView
-│   │── backtesting.md                         # Backtesting results & analysis
-│
-│── NSGA-II/                                   # Parameter optimization for ACTOS
-│   │── ACTOS-V1-NSGA-II-PROCESS.PY            # Python script for NSGA-II optimization
-│   │── ACTOS-V1-OPTIMIZATION-RESULTS.md       # Results from NSGA-II optimization
-│   │── OPTIMIZATION-PARAMETER-EXTRACTION.PY   # Parameter extraction for tuning
-│   │── PARAMETER-EXTRACTION-FEEDBACK.md       # Insights on parameter adjustments
-│
-│── README.md                                  # Project documentation
-│── summary.md                                 # Key differences between strategies
-
----
-
 ## 🔧 How to Use  
 
 ### **1. Use in TradingView (Pine Script)**  
