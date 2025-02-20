@@ -1,1 +1,51 @@
+//@version=6
+strategy("ACTOS-v1", overlay=true, initial_capital=20000)
+
+
+// Define inputs
+emaLengthRSI = 7
+emaLengthShort = 9
+emaLengthLong = 20
+psarStart = 0.02
+psarInc = 0.02
+psarMax = 0.2
+
+
+// Calculate indicators
+rsiValue = ta.rsi(close, 14)
+pEmaRSI = ta.ema(rsiValue, emaLengthRSI)
+emaShort = ta.ema(close, emaLengthShort)
+emaLong = ta.ema(close, emaLengthLong)
+psarValue = ta.sar(psarStart, psarInc, psarMax)
+
+
+// Initialize states
+var float prevPSAR = na
+var float prevRSI = na
+
+
+// Define entry conditions
+longCondition = (pEmaRSI > 60 and emaShort > emaLong)
+shortCondition = (pEmaRSI < 40 and psarValue > close and prevPSAR <= psarValue)
+exitCondition = (rsiValue > 55 and prevRSI > rsiValue)
+
+
+// Check conditions and take actions
+if (not na(prevPSAR) and not na(prevRSI))  // Ensure previous values are available
+   if (strategy.position_size == 0)  // No position currently held
+       if (longCondition)
+           strategy.entry("Buy", strategy.long)
+       else if (shortCondition)
+           strategy.entry("Sell", strategy.short)
+   else if (strategy.position_size > 0)  // Holding a long position
+       if (shortCondition or exitCondition)
+           strategy.close("Buy")
+   else if (strategy.position_size < 0)  // Holding a short position
+       if (longCondition or exitCondition)
+           strategy.close("Sell")
+
+
+// Update previous values
+prevPSAR := psarValue
+prevRSI := rsiValue
 
