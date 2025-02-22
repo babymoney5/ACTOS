@@ -44,7 +44,7 @@ These indicators were selected based on their performance in **different market 
 
 ### **1. Use in TradingView (Pine Script)**  
 - Copy **ACTOS-V1.pine** or **ACTOS-V2.pine** into TradingView.  
-- Apply it to any asset (Crypto, Stocks, Forex).  
+- Apply it to any asset (Crypto, Stocks, Forex). Performs best on trending Bitcoin markets.   
 - Adjust input parameters if needed.  
 
 ### **2. Backtesting & Optimization (Python)**  
